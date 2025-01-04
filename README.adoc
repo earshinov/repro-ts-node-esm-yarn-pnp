@@ -1,6 +1,9 @@
 = repro-ts-node-esm-yarn-pnp
 :nofooter:
 
+* https://github.com/TypeStrong/ts-node/issues/2148[Relative .js imports still not resolved to .ts (under Yarn PNP?) · Issue #2148 · TypeStrong/ts-node]
+* https://github.com/yarnpkg/berry/issues/6645[[Bug?\] [ts-node\]: ts-node fails to resolve relative .js imports into .ts under Yarn PNP · Issue #6645 · yarnpkg/berry]
+
 [source]
 ----
 $ yarn run test
