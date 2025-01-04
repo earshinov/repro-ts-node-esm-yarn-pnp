@@ -1,0 +1,14 @@
+{
+  "name": "repro-ts-node-esm-yarn-pnp",
+  "private": true,
+  "packageManager": "yarn@4.5.1",
+  "type": "module",
+  "scripts": {
+    "test": "yarn node --loader=ts-node/esm.mjs --loader=./.pnp.loader.mjs -- src/main.ts",
+    "test-with-custom-resolver": "yarn node --loader=ts-node/esm.mjs --loader=./.pnp.loader.mjs --loader=./helpers/resolve-js2ts.mjs -- src/main.ts"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.2",
+    "typescript": "~5.6"
+  }
+}

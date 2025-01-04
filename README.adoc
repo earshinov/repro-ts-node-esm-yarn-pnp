@@ -1,0 +1,57 @@
+= repro-ts-node-esm-yarn-pnp
+:nofooter:
+
+[source]
+----
+$ yarn run test
+(node:12796) [DEP0180] DeprecationWarning: fs.Stats constructor is deprecated.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+Error: Qualified path resolution failed: we looked for the following paths, but none could be accessed.
+
+Source path: D:\dev\repro-ts-node-esm-yarn-pnp\src\lib\a.js
+Not found: D:\dev\repro-ts-node-esm-yarn-pnp\src\lib\a.js
+
+    at makeError (D:\dev\repro-ts-node-esm-yarn-pnp\.pnp.cjs:5630:34)
+    at resolveUnqualified (D:\dev\repro-ts-node-esm-yarn-pnp\.pnp.cjs:7362:13)
+    at resolveRequest (D:\dev\repro-ts-node-esm-yarn-pnp\.pnp.cjs:7402:14)
+    at Object.resolveRequest (D:\dev\repro-ts-node-esm-yarn-pnp\.pnp.cjs:7458:26)
+    at resolve$1 (file:///D:/dev/repro-ts-node-esm-yarn-pnp/.pnp.loader.mjs:2043:21)
+    at nextResolve (node:internal/modules/esm/hooks:748:28)
+    at Hooks.resolve (node:internal/modules/esm/hooks:240:30)
+    at MessagePort.handleMessage (node:internal/modules/esm/worker:199:24)
+    at MessagePort.[nodejs.internal.kHybridDispatch] (node:internal/event_target:816:20)
+    at MessagePort.<anonymous> (node:internal/per_context/messageport:23:28)
+
+Node.js v22.9.0
+----
+
+[source]
+----
+$ yarn run test-with-custom-resolver
+(node:47096) [DEP0180] DeprecationWarning: fs.Stats constructor is deprecated.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+resolve-js2ts: file:///D:/dev/repro-ts-node-esm-yarn-pnp/src/main.ts
+resolve-js2ts: ./lib/a.js
+a
+----
+
+Custom resolver:
+
+[source,javascript]
+----
+export function resolve(specifier, context, nextResolve) {
+  console.log(`resolve-js2ts: ${specifier}`);
+  if (!specifier.endsWith('.js')) {
+    return nextResolve(specifier, context);
+  }
+  return Promise.resolve(nextResolve(specifier, context)).catch((err) => {
+    return Promise.resolve(nextResolve(specifier.replace(/\.js$/, '.ts'), context)).catch(() => {
+      throw err;
+    });
+  });
+}
+----
