@@ -1,8 +1,13 @@
 = repro-ts-node-esm-yarn-pnp
 :nofooter:
+:toc: preamble
+
+Bug reports:
 
 * https://github.com/TypeStrong/ts-node/issues/2148[Relative .js imports still not resolved to .ts (under Yarn PNP?) · Issue #2148 · TypeStrong/ts-node]
 * https://github.com/yarnpkg/berry/issues/6645[[Bug?\] [ts-node\]: ts-node fails to resolve relative .js imports into .ts under Yarn PNP · Issue #6645 · yarnpkg/berry]
+
+== Yarn PNP
 
 [source]
 ----
@@ -32,6 +37,8 @@ Not found: D:\dev\repro-ts-node-esm-yarn-pnp\src\lib\a.js
 Node.js v22.9.0
 ----
 
+== Yarn PNP + custom resolver
+
 [source]
 ----
 $ yarn run test-with-custom-resolver
@@ -57,4 +64,19 @@ export function resolve(specifier, context, nextResolve) {
     });
   });
 }
+----
+
+== nodeLinker: node-modules
+
+Make sure to `yarn config set nodeLinker node-modules && yarn install` first.
+
+[source]
+----
+$ yarn run test-with-node-modules
+(node:2031) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+--import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("ts-node/esm.mjs", pathToFileURL("./"));'
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2031) [DEP0180] DeprecationWarning: fs.Stats constructor is deprecated.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+a
 ----
