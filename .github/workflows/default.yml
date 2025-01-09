@@ -25,6 +25,9 @@ jobs:
       - name: Run
         run: yarn run test
         continue-on-error: true
+      - name: Run (experimental resolver)
+        run: yarn run test-with-experimental-resolver
+        continue-on-error: true
       - name: Run (custom resolver)
         run: yarn run test-with-custom-resolver
       - name: 'Run (nodeLinker: node-modules)'

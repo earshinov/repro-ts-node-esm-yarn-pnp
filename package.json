@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "test": "yarn node --loader=ts-node/esm.mjs --loader=./.pnp.loader.mjs -- src/main.ts",
+    "test-with-experimental-resolver": "TS_NODE_PROJECT=tsconfig.ts-node-experimental-resolver.json yarn node --loader=ts-node/esm.mjs --loader=./.pnp.loader.mjs -- src/main.ts",
     "test-with-custom-resolver": "yarn node --loader=ts-node/esm.mjs --loader=./.pnp.loader.mjs --loader=./helpers/resolve-js2ts.mjs -- src/main.ts",
     "test-with-node-modules": "yarn node --loader=ts-node/esm.mjs -- src/main.ts"
   },
